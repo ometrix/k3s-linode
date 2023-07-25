@@ -1,0 +1,8 @@
+#SSh key
+*.pub
+# terraform files
+.terraform/
+*.tfvars
+*.tfstate
+*.tfstate.backup
+*.lock.hcl

@@ -18,12 +18,12 @@ DNS=9.9.9.9 8.8.8.8
 Domains=members.linode.com
 IPv6PrivacyExtensions=false
 
-Gateway=172.16.0.1
+Gateway=172.16.1.1
 Address=$IP/24" > /etc/systemd/network/05-eth0.network
 
 sudo systemctl restart systemd-networkd
 
-sudo apt-get update ; sudo apt-get install -y haproxy vim
+sudo apt-get update ; sudo apt-get install -y haproxy vim 
 
 sed -i 's/mode\thttp/mode\ttcp/g' /etc/haproxy/haproxy.cfg
 sed -i 's/option\thttplog/option\ttcplog/g' /etc/haproxy/haproxy.cfg
@@ -36,9 +36,12 @@ default_backend k8sServers
 
 backend k8sServers
 balance roundrobin
-server cp 172.30.0.51:6443 check #<-- Edit these with your IP addresses, port, and hostname
-# server secondcp 172.16.0.3:6443 check #<-- Comment out until ready
-# server thirdcp 10.128.0.66:6443 check #<-- Comment out until ready
+server cp 172.16.2.101:6443 check #<-- Edit these with your IP addresses, port, and hostname
+server cp2 172.16.2.102:6443 check
+#server cp3 172.30.0.53:6443 check
+#server cp4 172.16.0.51:6443 check #<-- Comment out until ready
+#server cp5 172.16.0.52:6443
+#server cp6 172.16.0.53:6443
 listen stats
 bind :9999
 mode http

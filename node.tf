@@ -8,6 +8,10 @@ exec > >(tee /var/log/userdata.log|logger -t userdata -s 2>/dev/console) 2>&1
 
 export IP="$(ip addr show eth0 | grep -oP 'inet \K[\d.]+')"
 
+export N="$(ip addr show eth0 | grep -oP 'inet \K[\d.]+' | awk -F'.' '{print $NF}')"
+
+hostnamectl set-hostname worker$N
+
 echo "
 [Match]
 Name=eth0
@@ -18,12 +22,12 @@ DNS=9.9.9.9 8.8.8.8
 Domains=members.linode.com
 IPv6PrivacyExtensions=false
 
-Gateway=172.16.0.1
+Gateway=172.16.1.1
 Address=$IP/24" > /etc/systemd/network/05-eth0.network
 
 sudo systemctl restart systemd-networkd
 
-echo "172.16.0.2 k8scp" >> /etc/hosts
+echo "10.3.101.51 k8scp" >> /etc/hosts
 
 apt-get update
 apt-get install -y vim
@@ -61,8 +65,11 @@ https://packages.cloud.google.com/apt/doc/apt-key.gpg \
 
 apt-get update
 
-apt-get install -y kubeadm=1.24.1-00 kubelet=1.24.1-00 kubectl=1.24.1-00
+apt-get install -y kubeadm=1.28.1-00 kubelet=1.28.1-00 kubectl=1.28.1-00
 apt-mark hold kubelet kubeadm kubectl
+
+kubeadm join --discovery-token cq1xjm.76cv01c9kvs3dua7 --discovery-token-ca-cert-hash sha256:e4f723afc0fa78d0158199ee2d96dcadc17ce8a979d11800ad911eddc445ed14 k8scp:6443
+
 EOF
   images = ["linode/ubuntu20.04"]
   rev_note = "initial version"

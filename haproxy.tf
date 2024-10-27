@@ -28,16 +28,32 @@ sudo apt-get update ; sudo apt-get install -y haproxy vim
 sed -i 's/mode\thttp/mode\ttcp/g' /etc/haproxy/haproxy.cfg
 sed -i 's/option\thttplog/option\ttcplog/g' /etc/haproxy/haproxy.cfg
 
-echo "frontend proxynode
+echo "
+frontend httpnodes
 bind *:80
-bind *:6443
 stats uri /proxystats
-default_backend k8sServers
+default_backend k8sHttp
 
-backend k8sServers
+backend k8sHttp
 balance roundrobin
-server cp 172.16.2.101:6443 check #<-- Edit these with your IP addresses, port, and hostname
-server cp2 172.16.2.102:6443 check
+server k3sm 172.16.2.101:31843 check #<-- Edit these with your IP addresses, port, and hostname
+server k3sm2 172.16.2.102:31843 check
+server k3sm3 172.16.2.103:31843 check
+server worker101 172.16.1.101:31843 check
+server worker102 172.16.1.102:31843 check
+
+frontend HTTPSNodes
+bind *:443
+stats uri /proxystats
+default_backend k8sHttps
+
+backend k8sHttps
+balance roundrobin
+server cp 172.16.2.101:30257 check #<-- Edit these with your IP addresses, port, and hostname
+server cp2 172.16.2.102:30257 check
+server cp3 172.16.2.103:30257 check
+server worker101 172.16.1.101:30257 check
+server worker102 172.16.1.102:30257 check
 #server cp3 172.30.0.53:6443 check
 #server cp4 172.16.0.51:6443 check #<-- Comment out until ready
 #server cp5 172.16.0.52:6443

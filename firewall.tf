@@ -28,5 +28,5 @@ resource "linode_firewall" "worker_firewall" {
   outbound_policy = "ACCEPT"
 
   #linodes = [linode_instance.haproxy.id] 
-  linodes = [linode_instance.worker101.id, linode_instance.worker102.id, linode_instance.worker103.id] 
+  linodes = [for instance in linode_instance.worker : instance.id]
 }

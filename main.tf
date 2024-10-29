@@ -23,7 +23,7 @@ resource "linode_instance" "worker" {
   root_pass = "dad23,ad;kfa321/"
 
   tags = each.value.tags
-  swap_size = 1
+  swap_size = 2000
 
   interface {
     purpose = "vlan"

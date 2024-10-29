@@ -41,6 +41,7 @@ server k3sm2 172.16.2.102:31843 check
 server k3sm3 172.16.2.103:31843 check
 server worker101 172.16.1.101:31843 check
 server worker102 172.16.1.102:31843 check
+server worker103 172.16.1.103:31843 check
 
 frontend HTTPSNodes
 bind *:443
@@ -49,11 +50,12 @@ default_backend k8sHttps
 
 backend k8sHttps
 balance roundrobin
-server cp 172.16.2.101:30257 check #<-- Edit these with your IP addresses, port, and hostname
-server cp2 172.16.2.102:30257 check
-server cp3 172.16.2.103:30257 check
+server k3sm 172.16.2.101:30257 check #<-- Edit these with your IP addresses, port, and hostname
+server k3sm2 172.16.2.102:30257 check
+server k3sm3 172.16.2.103:30257 check
 server worker101 172.16.1.101:30257 check
 server worker102 172.16.1.102:30257 check
+server worker103 172.16.1.103:31843 check
 #server cp3 172.30.0.53:6443 check
 #server cp4 172.16.0.51:6443 check #<-- Comment out until ready
 #server cp5 172.16.0.52:6443
